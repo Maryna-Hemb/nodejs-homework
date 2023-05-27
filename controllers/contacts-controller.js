@@ -3,7 +3,8 @@ const { HttpError } = require("../helpers");
 const { ctrlWrapper } = require("../decorators");
 
 const listContacts = async (req, res) => {
-  const result = await Contact.find();
+  const { _id: owner } = req.user;
+  const result = await Contact.find({ owner });
   res.json(result);
 };
 
@@ -13,13 +14,14 @@ const getContactById = async (req, res) => {
   const result = await Contact.findById(contactId);
 
   if (!result) {
-    throw HttpError(404, "Not found");
+    throw new HttpError(404, "Not found");
   }
   res.json(result);
 };
 
 const addContact = async (req, res) => {
-  const result = await Contact.create(req.body);
+  const { _id: owner } = req.user;
+  const result = await Contact.create(...req.body, owner);
   res.status(201).json(result);
 };
 
@@ -27,7 +29,7 @@ const removeContact = async (req, res) => {
   const { contactId } = req.params;
   const result = await Contact.findByIdAndRemove(contactId);
   if (!result) {
-    throw HttpError(404, "Not found");
+    throw new HttpError(404, "Not found");
   }
   res.json({ message: "contact deleted" });
 };
@@ -38,7 +40,7 @@ const updateContact = async (req, res, next) => {
     new: true,
   });
   if (!result) {
-    throw HttpError(404, "Not found");
+    throw new HttpError(404, "Not found");
   }
   res.status(200).json(result);
 };
@@ -49,7 +51,7 @@ const updateStatusContact = async (req, res, next) => {
     new: true,
   });
   if (!result) {
-    throw HttpError(404, "Not found");
+    throw new HttpError(404, "Not found");
   }
   res.status(200).json(result);
 };
