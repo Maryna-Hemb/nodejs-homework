@@ -1,13 +1,13 @@
 const { HttpError } = require("../helpers");
 
-const validateFavorite = (schema) => {
+const validateSubscription = (schema) => {
   return (req, res, next) => {
     const { error } = schema.validate(req.body);
     if (error) {
-      next(new HttpError(400, "missing field favorite"));
+      next(new HttpError(400, "invalid subscription"));
     }
     next();
   };
 };
 
-module.exports = validateFavorite;
+module.exports = validateSubscription;
