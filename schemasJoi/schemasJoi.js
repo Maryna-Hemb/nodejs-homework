@@ -39,4 +39,13 @@ const subscriptionSchema = Joi.object({
     .required(),
 });
 
-module.exports = { schemas, userJoiSchema, subscriptionSchema };
+const userEmailSchema = Joi.object({
+  email: Joi.string().email().required(),
+});
+
+module.exports = {
+  schemas,
+  userJoiSchema,
+  subscriptionSchema,
+  userEmailSchema,
+};
